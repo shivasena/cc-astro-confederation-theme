@@ -2,6 +2,24 @@
 
 A starter template for Confederation College web projects built with Astro.js, featuring the college's brand styling.
 
+## 🚀 Getting Started
+
+To create a new project using this Confederation College Astro theme:
+
+```bash
+# Create a new project using this template
+npm create astro@latest my-cc-project -- --template shivasena/cc-astro-confederation-theme
+
+# Navigate to project folder
+cd my-cc-project
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
 ## 🎓 Features
 
 - Confederation College brand colors
@@ -23,7 +41,7 @@ A starter template for Confederation College web projects built with Astro.js, f
 │   ├── pages/              # Route pages
 │   │   └── index.astro     # Homepage
 │   └── styles/             # Global styles
-│       └── tailwind.css    # Tailwind with CC brand colors
+│       └── global.css    # Tailwind with CC brand colors
 └── package.json
 ```
 
