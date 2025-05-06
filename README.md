@@ -8,7 +8,7 @@ To create a new project using this Confederation College Astro theme:
 
 ```bash
 # Create a new project using this template
-npm create astro@latest my-cc-project -- --template shivasena/cc-astro-confederation-theme
+npm create astro@latest cc-astro-project -- --template shivasena/cc-astro-confederation-theme
 
 # Navigate to project folder
 cd my-cc-project
