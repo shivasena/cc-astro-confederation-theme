@@ -6,10 +6,13 @@ A starter template for Confederation College web projects built with Astro.js, f
 
 To create a new project using this Confederation College Astro theme:
 
-```bash
-# Create a new project using this template
-npm create astro@latest cc-astro-project -- --template shivasena/cc-astro-confederation-theme
+### Create a new project using this template
 
+```bash
+npm create astro@latest cc-astro-project -- --template shivasena/cc-astro-confederation-theme
+```
+
+```bash
 # Navigate to project folder
 cd my-cc-project
 
@@ -33,16 +36,23 @@ npm run dev
 ```text
 /
 ├── public/
-│   └── favicon.svg         # Confederation College favicon
+│   ├── favicon.svg           # Confederation College favicon
+│   └── site.webmanifest      # Web app manifest file
 ├── src/
-│   ├── components/         # Reusable UI components
-│   ├── layouts/            # Page layouts
-│   │   └── Layout.astro    # Main layout with CC branding
-│   ├── pages/              # Route pages
-│   │   └── index.astro     # Homepage
-│   └── styles/             # Global styles
-│       └── global.css    # Tailwind with CC brand colors
-└── package.json
+│   ├── components/           # Reusable UI components
+│   │   └── svg/              # SVG components as Astro files
+│   │       └── LogoHorizontalSVG.astro  # CC logo component
+│   ├── layouts/              # Page layouts
+│   │   └── Layout.astro      # Main layout with CC branding
+│   ├── pages/                # Route pages
+│   │   ├── index.astro       # Homepage
+│   │   └── 404.astro         # Error page
+│   └── styles/               # Global styles
+│       └── global.css        # Tailwind with CC brand colors
+├── astro.config.mjs          # Astro configuration
+├── tailwind.config.mjs       # Tailwind configuration
+├── tsconfig.json             # TypeScript configuration
+└── package.json              # Dependencies and scripts
 ```
 
 ## 🧞 Commands
