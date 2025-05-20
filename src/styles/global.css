@@ -13,10 +13,33 @@
   --color-accent-yellow: oklch(78.46% 0.165273 75.3442); 
   --color-accent-red: oklch(60.95% 0.2056 29.03); 
   --color-accent-brown: oklch(38.06% 0.0819 55.12); 
-  --color-secondary-1: oklch(40.81% 0.0852 154.17); 
-  --color-secondary-2: oklch(37.82% 0.1445 30.8); 
+  --color-secondary-1: oklch(40.81% 0.0852 154.17);
+  --color-secondary-2: oklch(37.82% 0.1445 30.8);
+
+  /* Typography */
+  --fs-h1: 3.052rem;
+  --fs-h2: 2.441rem;
+  --fs-h3: 1.953rem;
+  --fs-h4: 1.563rem;
+  --fs-h5: 1.25rem;
+  --fs-h6: 1rem;
+  --fs-p: 1rem;
+  --fs-small: .8rem;
+  --fs-quote: 1.25rem;
 }
 
 :root {
   @apply font-outfit text-dark bg-light antialiased;
+}
+
+@layer utilities {
+  .text-h1   { font-size: var(--fs-h1); line-height: 1.33; font-weight: 700; }
+  .text-h2   { font-size: var(--fs-h2); line-height: 1.33; font-weight: 600; }
+  .text-h3   { font-size: var(--fs-h3); line-height: 1.33; font-weight: 600; }
+  .text-h4   { font-size: var(--fs-h4); line-height: 1.33; font-weight: 600; }
+  .text-h5   { font-size: var(--fs-h5); line-height: 1.33; font-weight: 600; }
+  .text-h6   { font-size: var(--fs-h6); line-height: 1.33; font-weight: 600; }
+  .text-p    { font-size: var(--fs-p);  line-height: 1.75; font-weight: 300; }
+  .text-small{ font-size: var(--fs-small); line-height: 1.75; }
+  .text-quote{ font-size: var(--fs-quote); line-height: 1.75; }
 }
