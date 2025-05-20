@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* switch your “1rem” from the 16px default up to 18px */
+/* @layer base {
+  html {
+    font-size: 18px;
+  }
+} */
+
 @theme {
   /* Fonts */
   /* --font-family: 'Outfit Variable', sans-serif; */
