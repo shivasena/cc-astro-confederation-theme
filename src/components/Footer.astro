@@ -1,0 +1,50 @@
+---
+// Get current year for copyright statement
+const currentYear = new Date().getFullYear();
+import LogoHorizontalSVG from "./svg/LogoHorizontalSVG.astro";
+---
+
+<footer aria-labelledby="footer-heading" class="bg-gray-900 text-white">
+  <h2 id="footer-heading" class="sr-only">Footer</h2>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <!-- Logo -->
+      <div class="mb-6 md:mb-0">
+        <a
+          href="/"
+          class="inline-block"
+          aria-label="Confederation College Home"
+        >
+          <LogoHorizontalSVG
+            primaryColor="#ffffff"
+            secondaryColor="#ffffff"
+            class="h-12 w-auto"
+            width="200"
+            height="48"
+          />
+        </a>
+      </div>
+
+      <!-- Contact info -->
+      <address
+        class="not-italic text-center md:text-right text-small text-gray-300 mb-6 md:mb-0"
+      >
+        <p>Confederation College</p>
+        <p>Thunder Bay, Ontario</p>
+        <!-- <p class="mt-2">
+          <a href="tel:+18076731401" class="hover:text-white transition"
+            >807-673-1401</a
+          >
+        </p> -->
+      </address>
+    </div>
+
+    <!-- Copyright -->
+    <div class="mt-8 pt-6 border-t border-gray-700">
+      <p class="text-small text-gray-300 text-center">
+        &copy; {currentYear} Confederation College. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
