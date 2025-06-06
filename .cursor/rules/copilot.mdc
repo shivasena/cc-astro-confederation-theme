@@ -1,12 +1,15 @@
-# Copilot Instructions
-
+---
+description: 
+globs: 
+alwaysApply: true
+---
 You are an expert in JavaScript, TypeScript, and Astro framework for scalable web development.
 
 **Key Principles**
 
 - Write technical, concise answers with clear Astro examples.
 - Favor static generation and minimal JavaScript for top performance.
-- Leverage Astro’s multi-framework support and partial hydration for React when needed. AlpineJS is the first choice for simple client-side scripts using the official AstroJS + AlpineJS integration.
+- Leverage Astro’s multi-framework support and partial hydration for React when needed. AlpineJS if the first choice if we need to use simple client side scripts with official AstroJS + AlpineJS integration.
 - Use descriptive names and follow Astro’s naming conventions.
 - Organize files using Astro’s file-based routing.
 
@@ -14,30 +17,27 @@ You are an expert in JavaScript, TypeScript, and Astro framework for scalable we
 
 ## Astro Project Structure
 
-Adopt this layout:
-
-```
-src/
-├── components/
-├── components/svg/        # Transformed SVGs as Astro components
-├── layouts/
-├── pages/
-├── styles/                # global.css and other styles
-├── assets/                # Local images and files
-├── data/                  # Local JSON or other data files
-├── lib/                   # Utility functions
-├── types/                 # TypeScript definitions
-public/                    # Static assets
-astro.config.mjs           # Configuration
-```
+- Adopt this layout:
+  - `src/`
+    - `components/`
+    - `components/svg/` <!-- Transformed SVGs as Astro components -->
+    - `layouts/`
+    - `pages/`
+    - `styles/` <!-- global.css and other styles -->
+    - `assets/` <!-- Local images and files -->
+    - `data/` <!-- Local JSON or other data files -->
+    - `lib/` <!-- Utility functions -->
+    - `types/` <!-- TypeScript definitions -->
+  - `public/` <!-- Static assets -->
+  - `astro.config.mjs` <!-- Configuration -->
 
 ---
 
 ## Icons
 
-- Choose an icon set that matches your design style.
-- Convert SVG files into Astro components under `src/components/svg/` for consistent styling.
-- Use the `astro-icon` library for icons. Prioritize collections preinstalled from `@iconify-json/*` packages.
+- Pick an icon set that matches your design style.
+- Convert SVG files into Astro components under `src/components/svg/` so you can style them consistently.
+- Use astro-icon library for icons and most icons needs to be used from one collection when possible, prioritize collections that already preinstalled from @iconify-json/\* packages
 
 ---
 
@@ -46,7 +46,7 @@ astro.config.mjs           # Configuration
 - Build components as `.astro` files.
 - Import React components only if a feature demands client-side interactivity.
 - Pass data via props and compose small, reusable pieces.
-- Use `<Fragment>` when returning multiple elements without a wrapper.
+- Use `<Fragment>` when you need to return multiple elements without a wrapper.
 - Write ES module imports; avoid CommonJS.
 
 ---
@@ -57,7 +57,7 @@ astro.config.mjs           # Configuration
 - Create dynamic routes with `[...slug].astro`.
 - Use `getStaticPaths()` to generate static pages for dynamic routes.
 - Add a `404.astro` page for missing routes.
-- For collections (blog, docs), let `/blog/` be the main listing; page two is `/blog/1/`, then `/blog/2/`, etc., to keep the first page clean.
+- For collections (blog, docs), let `/blog/` be the main listing; page two is `/blog/1/`, then `/blog/2/`, etc., keeping the first page clean.
 
 ---
 
@@ -65,23 +65,23 @@ astro.config.mjs           # Configuration
 
 - Integrate a headless CMS (Sanity or similar) via Astro Content Layer if needed.
 - Store structured content in collections instead of hardcoding Markdown for dynamic sections.
-- If using Markdown, place `.md`/`.mdx` files in a `content/` folder and read them via Astro’s built-in support.
+- If you must use Markdown, place `.md`/`.mdx` files in a `content/` folder and read them via Astro’s built-in support.
 
 ---
 
 ## Data Management
 
-- Use SQLite with Turso for build-time data needs.
-- Query the database in `getStaticPaths()` or server-side at build time.
+- Use SQLite with Turso for any build-time data needs.
+- Query the database in `getStaticPaths()` or on the server side at build time.
 - Keep sensitive keys in environment variables.
 
 ---
 
 ## Styling
 
-- All Tailwind theme and custom utilities go into `src/styles/global.css` instead of `tailwind.config.cjs`.
-- Use predefined utilities in `global.css` for colors and typography. To achieve shades, use transparency utilities like `text-dark/XX`.
-- At the top of `global.css`, import Tailwind and plugins:
+- All Tailwind theme and utilities go into `src/styles/global.css` instead of `tailwind.config.cjs`.
+- Use colors and typography from predefined utilities in global.css first, and to achieve shades you might use transparancy utility, like text-dark/XX from tailwind.
+- At the top of `global.css`, import Tailwind and any plugins:
   ```css
   @import "tailwindcss";
   @plugin "@tailwindcss/typography";
@@ -201,7 +201,7 @@ astro.config.mjs           # Configuration
     font-family: var(--font-outfit);
   }
   ```
-- For additional global overrides (e.g., root font-size), place them in `global.css` above or below Tailwind imports.
+- For any additional global rules (e.g., root font-size override), put them in `global.css` above or below the Tailwind imports.
 
 ---
 
@@ -226,9 +226,9 @@ astro.config.mjs           # Configuration
     <button type="submit">Send</button>
   </form>
   ```
-- Redirect to `/thank-you` after submission.
-- Add spam protection (honeypot fields or reCAPTCHA) and validation.
-- Ensure forms are accessible (labels, focus states, error feedback).
+- Redirect to a /thankyou page after submission.
+- Add basic spam protection (honeypot fields or reCAPTCHA) and validation.
+- Make forms accessible
 
 ---
 
@@ -289,7 +289,7 @@ astro.config.mjs           # Configuration
 - Run `astro build` before deploying.
 - Deploy to Netlify with GitHub integration; use Netlify Build Hooks for auto-deploy.
 - Store environment variables in Netlify Dashboard under Settings > Build & deploy > Environment.
-- For advanced CI, add a GitHub Actions workflow that runs `astro build` on push.
+- If you need advanced CI, add a GitHub Actions workflow that runs `astro build` on push.
 
 ---
 
@@ -297,16 +297,16 @@ astro.config.mjs           # Configuration
 
 - Write unit tests for utility functions using Vitest.
 - Use Cypress for end-to-end testing of core flows.
-- If design changes often, set up a visual regression tool like Chromatic or Percy.
+- If your design changes often, set up a visual regression tool like Chromatic or Percy.
 
 ---
 
 ## Accessibility
 
-- Use semantic HTML in components (headings, lists, landmarks, `<nav>`, `<aside>`, `<figure>`, etc.).
-- Add ARIA attributes for interactive elements (`role`, `aria-label`).
-- Confirm keyboard navigation works for custom elements.
-- Avoid inline styles that override focus outlines.
+- Use semantic HTML in components (headings, lists, landmarks, nav, aside, figure, etc...).
+- Add ARIA attributes for interactive elements (role, aria-label).
+- Confirm keyboard navigation works for any custom elements.
+- Avoid inline styles that might override focus outlines.
 
 ---
 
