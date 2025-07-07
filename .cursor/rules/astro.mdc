@@ -1,0 +1,163 @@
+---
+description: "Astro-specific Cursor rules and best practices"
+globs:
+  include:
+    - "src/**/*.astro"
+  exclude:
+    - "src/icons/**"
+alwaysApply: true
+---
+
+## Astro Language & Style
+
+[!must] Provide technical, concise answers with clear Astro v5+ code examples.
+[!must] Favor static generation; minimize client-side JavaScript.
+[!must] Use descriptive component names (e.g., `BlogPostCard.astro`) for discoverability.
+[!should] Leverage Astro's multi-framework support; prefer AlpineJS for simple interactivity.
+[!could] Use file-based routing; dynamic pages with `[...slug].astro` and `getStaticPaths()`.
+
+[!must] Recognize and suggest `@/*` imports based on your tsconfig.json:
+
+- Map `@foo` → `src/foo`
+- Map `@components/*` → `src/components/*`
+- Example: `import Button from "@components/ui/Button.astro";`
+
+## Project Structure
+
+Refer to the standard Astro layout under `src/`:
+
+- `components/`, `icons/` (for astro-icon SVG files)
+- `layouts/`, `pages/`, `styles/`, `assets/`, `data/`, `lib/`, `types/`
+- `public/` and `astro.config.mjs`
+- Base imports use the `@` alias configured in `tsconfig.json`:
+  ```jsonc
+  // tsconfig.json
+  {
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": { "@*": ["src/*"] }
+    }
+  }
+  ```
+
+## Icons & SVG Management
+
+[!must] Use [astro-icon](https://www.astroicon.dev/getting-started/) for all icon needs - avoid inline SVG icons.
+[!must] Choose one consistent Iconify collection (`@iconify-json/*`) per project and use it as the primary icon source.
+[!must] Only add additional Iconify collections if the primary collection doesn't have relevant icons.
+[!must] Use the `<Icon />` component from astro-icon instead of inline SVG or custom SVG components.
+[!should] Place custom SVG files in `/src/icons/` directory for automatic slug-based referencing.
+[!should] Organize icons in sub-folders within `/src/icons/` for better organization.
+[!could] Create reusable icon wrapper components with consistent props for size, color, and styling.
+
+## Styling & Theming
+
+- Point to `src/styles/global.css` for full theme variables and use modern Tailwind CSS v4+ approach (no tailwind.config.js involved).
+- Avoid embedding large CSS snippets in rules; reference source.
+- Encourage Tailwind utilities and `@layer utilities` for common styles.
+
+## Performance Optimization
+
+[!must] Use Astro client directives:
+
+- `client:load` for essential hydration
+- `client:idle`/`client:visible` for noncritical components
+  [!should] Optimize images via Astro's image integration and lazy-loading.
+
+## AI Hooks
+
+- **AI Hook**: `<!-- @autoDocs -->` in `.astro` templates to generate component docs.
+- **AI Hook**: `<!-- @suggestProps -->` where AI should infer and suggest prop types.
+
+## Content Management
+
+[!must] Use Astro Content Layer with TypeScript schemas in `src/content/`.
+[!should] Define collections with `defineCollection()` and Zod schemas for type safety.
+[!should] For CMS, prefer Sanity Studio with schemas in `sanity/schemas/*.ts` and TypeScript codegen.
+[!should] Fetch CMS data using `@sanity/client` in server utilities.
+
+## Data Management
+
+[!should] Use SQLite + Turso for lightweight database needs.
+[!must] Fetch data at build time in `getStaticPaths()` or server utilities.
+[!should] Use `Astro.glob()` for local data combined with external sources.
+
+## Image Optimization
+
+[!must] Use Unpic for optimized images (`@unpic/astro`), configure in `astro.config.mjs`.
+[!should] Prefer Astro's image integration for basic optimization.
+
+## Forms & Interactivity
+
+[!should] Use Netlify Forms for simple form handling (include hidden `form-name` input, thank-you redirects).
+[!should] Use Alpine.js for simple UI behaviors with `client:load` or CDN.
+[!could] For complex state, use Astro's partial hydration (`client:idle`, `client:visible`).
+
+## SEO & Meta
+
+[!must] Create a standardized `<SEO>` component for meta tags.
+[!should] Use canonical URLs, meta descriptions, Open Graph, and Twitter Card tags.
+
+## Testing & QA
+
+[!should] Use Vitest for unit testing utility functions and data logic.
+[!could] Implement visual regression testing for UI components.
+
+## Accessibility
+
+[!must] Use semantic HTML and ARIA roles.
+[!must] Ensure keyboard navigation for all interactive elements.
+[!should] Test with screen readers and accessibility tools.
+
+## Semantic HTML Structure
+
+[!must] Use semantically correct HTML elements for better accessibility and SEO:
+
+- Use `<main>` for the primary content area (only one per page)
+- Use `<article>` for self-contained content pieces (blog posts, product cards, etc.)
+- Use `<section>` for thematic grouping of content
+- Use `<header>` for introductory content (page headers, article headers)
+- Use `<footer>` for closing content
+- Use `<nav>` for navigation sections
+- Use `<aside>` for complementary content (sidebars, related content)
+- Use `<figure>` and `<figcaption>` for images with captions
+- Use `<dl>`, `<dt>`, `<dd>` for definition lists (not just for styling)
+- Use proper heading hierarchy (`<h1>` through `<h6>`)
+- Use `<address>` for contact information
+- Use `<time>` for dates and times with `datetime` attribute
+- Use `<mark>` for highlighted text
+- Use `<cite>` for citations
+
+[!must] Avoid using `<div>` when semantic elements are more appropriate
+[!should] Use ARIA landmarks when semantic elements aren't sufficient
+[!must] Ensure proper heading hierarchy (one `<h1>` per page, logical order)
+[!must] Check MainLayout.astro before using `<main>` - it should only be used in page content, not in layouts
+[!should] Use `<button>` for interactive elements, not styled `<div>` or `<span>`
+[!should] Use `<a>` for navigation, not styled buttons
+[!must] Include proper `alt` attributes for all images
+[!should] Use `<label>` elements for form inputs
+[!could] Consider using `<details>` and `<summary>` for expandable content
+
+## Conventions
+
+[!must] Use ES modules and native `node:fetch`.
+[!must] Use consistent trailing-slashes in URLs.
+[!should] Use Fontsource for web font optimization.
+
+## References
+
+- Astro v5 documentation: https://docs.astro.build
+- Astro Content Collections: https://docs.astro.build/en/guides/content-collections/
+- Astro Integrations: https://docs.astro.build/en/guides/integrations/
+- Turso for SQLite: https://turso.tech/
+- Netlify documentation: https://docs.netlify.com
+- Fontsource: https://fontsource.org/
+- Astro Icon docs: https://www.astroicon.dev/getting-started/
+- AlpineJS documentation: https://alpinejs.dev/
+- Astro Content Collections: https://docs.astro.build/en/guides/content-collections/
+- Astro Integrations: https://docs.astro.build/en/guides/integrations/
+- Turso for SQLite: https://turso.tech/
+- Netlify documentation: https://docs.netlify.com
+- Fontsource: https://fontsource.org/
+- Astro Icon docs: https://www.astroicon.dev/getting-started/
+- AlpineJS documentation: https://alpinejs.dev/

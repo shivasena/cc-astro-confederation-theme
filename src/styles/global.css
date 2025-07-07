@@ -14,9 +14,9 @@
   --font-outfit: 'Outfit Variable', sans-serif;
 
   /* Colors */
-  --color-accent: oklch(40.16% 0.087584 236.9217); /* Navy Blue */
-  --color-dark: oklch(23.29% 0.0395 238.46); 
-  --color-light: oklch(98.6% 0.0114 84.58); /* Based on Yellow */
+  --color-accent: oklch(40.16% 0.087584 236.9217);       /* Navy Blue */
+  --color-dark: oklch(23.29% 0.0395 238.46);             /* Dark Navy */
+  --color-light: oklch(98.6% 0.0114 84.58);              /* Based on Yellow */
   --color-accent-yellow: oklch(78.46% 0.165273 75.3442); 
   --color-accent-red: oklch(60.95% 0.2056 29.03); 
   --color-accent-brown: oklch(38.06% 0.0819 55.12); 

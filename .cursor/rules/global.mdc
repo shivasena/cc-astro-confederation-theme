@@ -1,0 +1,98 @@
+---
+description: "Global Cursor rules and best practices"
+globs:
+  include:
+    - "src/**/*.astro"
+  exclude:
+    - "src/icons/**"
+alwaysApply: true
+---
+
+## Global Key Principles
+
+[!must] Write modular, composable functions with single responsibilities.
+[!must] Use ES module syntax; avoid CommonJS patterns.
+[!should] Enforce TypeScript strict mode (`--strict`) for type safety.
+[!could] Use `<Fragment>` in `.astro` files for multiple root elements.
+[!should] Keep front-matter YAML minimal; delegate detailed content to source files.
+
+## Semantic HTML Structure
+
+[!must] Use semantically correct HTML elements for better accessibility and SEO:
+
+- Use `<main>` for the primary content area (only one per page and can be used if no general layout already used it. USuslly can be used in layout components)
+- Use `<article>` for self-contained content pieces
+- Use `<section>` for thematic grouping of content
+- Use `<header>` for introductory content
+- Use `<footer>` for closing content
+- Use `<nav>` for navigation sections
+- Use `<aside>` for complementary content
+- Use `<figure>` and `<figcaption>` for images with captions
+- Use `<dl>`, `<dt>`, `<dd>` for definition lists (not just for styling)
+- Use proper heading hierarchy (`<h1>` through `<h6>`)
+- Use `<address>` for contact information
+- Use `<time>` for dates and times with `datetime` attribute
+- Use `<mark>` for highlighted text
+- Use `<cite>` for citations
+
+[!must] Wrap each section in a `<section>` element for proper semantic structure
+[!must] Use container wrappers with max-width wor container and horizontal padding inside sections to enable full-width backgrounds with aligned content
+[!must] Avoid using `<div>` when semantic elements are more appropriate
+[!should] Use ARIA landmarks when semantic elements aren't sufficient
+[!must] Ensure proper heading hierarchy (one `<h1>` per page, logical order)
+[!should] Use `<button>` for interactive elements, not styled `<div>` or `<span>`
+[!should] Use `<a>` for navigation, not styled buttons
+[!must] Include proper `alt` attributes for all images
+[!should] Use `<label>` elements for form inputs
+
+## Documentation & Project Organization
+
+[!must] Place all project documentation markdown files (except the main README.md) under the `/docs/` folder at the project root.
+[!must] Do not keep documentation files in `src/` or other code directories; instead, reference the correct `/docs/` location in related files if needed.
+[!should] Update all internal documentation links to use the `/docs/` path for consistency.
+
+## Test File Conventions
+
+testGlobs:
+
+- "\*_/_.test.{js,ts}"
+- "\*_/_.spec.{js,ts}"
+
+[!should] Suggest Vitest `describe`/`it` structure for tests and `vi.mock()` for mocking.
+
+## Styling & Theming
+
+### Tailwind Theme Colors
+
+[!must] Use only your project's predefined color tokens.  
+• Tailwind's generic palettes are off-limits—except `white` and `black` for contrast.  
+• Examples: `bg-accent-yellow`, `text-secondary-1`; **never** `bg-blue-500` or `text-pink-300`.
+
+### Spacing
+
+[!must] Stick to your container policy for horizontal gutters.  
+[!must] For vertical gaps between siblings, always use `space-y-<n>` utilities—no individual top/bottom margins or paddings.  
+[!should] Choose spacing steps from a single consistent scale (divisible by 3 **or** 4), not both, with only rare exceptions.
+
+### Typography
+
+[!must] Always apply your semantic typography utilities from `global.css` (e.g. `.text-h1`, `.text-lead`), never ad-hoc Tailwind text sizes or weights.  
+[!could] When you pull in example code, automatically swap any raw `text-lg`/`font-bold` etc. for your branded classes.
+
+### Section Design Patterns
+
+[!must] Use clean section headers to clearly communicate the section's purpose to users
+[!must] Include eyebrow text (one-two word slogan or essence) above the main section header
+[!must] Add a short description under the section header to provide context
+[!should] Structure section headers as: eyebrow → main header → description
+
+## Icon & Asset Management
+
+[!should] When working with icons, prefer consistent icon sets and maintain design system consistency.
+[!should] For SVG icons, create reusable components with proper TypeScript interfaces.
+[!could] Consider icon accessibility with proper ARIA labels and semantic meaning.
+
+## AI Hooks
+
+- **AI Hook**: `/** @autoDoc */` above exported functions to generate documentation.
+- **AI Hook**: `/** @generateTests */` above utility functions to scaffold tests.
