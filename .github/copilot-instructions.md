@@ -1,341 +1,263 @@
-# Copilot Instructions
+# Copilot Instruction for AstroJS v5 + Tailwind v4+
 
-You are an expert in JavaScript, TypeScript, and Astro framework for scalable web development.
+## Key Principles
 
-**Key Principles**
-
-- Write technical, concise answers with clear Astro examples.
-- Favor static generation and minimal JavaScript for top performance.
-- Leverage Astro’s multi-framework support and partial hydration for React when needed. AlpineJS is the first choice for simple client-side scripts using the official AstroJS + AlpineJS integration.
-- Use descriptive names and follow Astro’s naming conventions.
-- Organize files using Astro’s file-based routing.
+1. **Concise & Technical**: Provide short, precise answers with AstroJS v5+ examples.
+2. **Static-First**: Favor static generation, minimize runtime JS, optimize performance.
+3. **CSS-First Styling**: Use Tailwind CSS v4+ with the CSS token API (`@theme` in global.css). Avoid JS-based theming.
+4. **Typed Content**: Use Astro’s Content Layer or Sanity CMS paired with TypeScript schemas for safe, compile-time typing.
+5. **Modular & Reusable**: Follow Astro’s component conventions, leverage partial hydration only where needed.
 
 ---
 
-## Astro Project Structure
-
-Adopt this layout:
+## Project Structure
 
 ```
 src/
-├── components/
-├── components/svg/        # Transformed SVGs as Astro components
-├── layouts/
-├── pages/
-├── styles/                # global.css and other styles
-├── assets/                # Local images and files
-├── data/                  # Local JSON or other data files
-├── lib/                   # Utility functions
-├── types/                 # TypeScript definitions
-public/                    # Static assets
-astro.config.mjs           # Configuration
+├── components/           # .astro and framework components
+├── components/react/     # React components (only if advanced interactivity needed)
+├── components/vue/       # Vue components (only if advanced interactivity needed)
+├── components/svelte/    # Svelte components (only if advanced interactivity needed)
+├── layouts/              # Shared layout components
+├── pages/                # File-based routes
+├── content/              # Astro Content Layer collections (with TS types)
+├── sanity/               # (Optional) Sanity Studio + schema definitions
+├── styles/               # global.css, component CSS
+├── assets/               # Images, fonts, static files
+│   └── icons/            # Custom SVG files for astro-icon
+├── lib/                  # Utility functions, data-fetchers
+├── types/                # Shared TypeScript types
+└── public/               # Static assets
+docs/                     # Project documentation files
+astro.config.mjs
+sanity.config.ts          # optional, Sanity configuration
 ```
 
 ---
 
-## Icons
+## Icons & SVG Management
 
-- Choose an icon set that matches your design style.
-- Convert SVG files into Astro components under `src/components/svg/` for consistent styling.
-- Use the `astro-icon` library for icons. Prioritize collections preinstalled from `@iconify-json/*` packages.
+- Use [astro-icon](https://www.astroicon.dev/getting-started/) for all icon needs.
+- Choose one consistent Iconify collection (`@iconify-json/*`) per project.
+- Use the `<Icon />` component from astro-icon instead of custom SVG components.
+- Place custom SVG files in `src/assets/icons/` directory for automatic slug-based referencing.
+- Organize icons in sub-folders within `src/assets/icons/` for better organization.
+- Avoid inline SVG or transforming SVGs to Astro components.
 
 ---
 
 ## Component Development
 
-- Build components as `.astro` files.
-- Import React components only if a feature demands client-side interactivity.
-- Pass data via props and compose small, reusable pieces.
-- Use `<Fragment>` when returning multiple elements without a wrapper.
-- Write ES module imports; avoid CommonJS.
+- Use `.astro` files by default.
+- Import React/Vue/Svelte components only if advanced interactivity is required and put those component under the /components/react/, /components/vue/, /components/svelte/ folders.
+- Design components for prop-driven reuse.
 
 ---
 
-## Routing and Pages
+## Routing & Pages
 
-- Place pages under `src/pages/` for file-based routing.
-- Create dynamic routes with `[...slug].astro`.
-- Use `getStaticPaths()` to generate static pages for dynamic routes.
-- Add a `404.astro` page for missing routes.
-- For collections (blog, docs), let `/blog/` be the main listing; page two is `/blog/1/`, then `/blog/2/`, etc., to keep the first page clean.
+- File-based routes under `src/pages/`.
+- Dynamic routes: `[...slug].astro`.
+- Fetch and pass data via `getStaticPaths()` and frontmatter.
+- Include `404.astro` for missing pages.
+- For paginated content, keep `/blog/` as page one; `/blog/2/`, `/blog/3/`, etc.
 
 ---
 
 ## Content Management
 
-- Integrate a headless CMS (Sanity or similar) via Astro Content Layer if needed.
-- Store structured content in collections instead of hardcoding Markdown for dynamic sections.
-- If using Markdown, place `.md`/`.mdx` files in a `content/` folder and read them via Astro’s built-in support.
+### Astro Content Layer
+
+- Define collections in `src/content/`, each with a `schema.ts` using TypeScript.
+- Example:
+
+  ```ts
+  // src/content/schema.ts
+  import { z, defineCollection } from "astro:content";
+
+  const blog = defineCollection({
+    schema: z.object({
+      title: z.string(),
+      date: z.string().transform((s) => new Date(s)),
+      tags: z.array(z.string()),
+    }),
+  });
+
+  export const collections = { blog };
+  ```
+
+- Access via `import { collections } from 'astro:content'`.
+
+### Sanity CMS (Optional)
+
+- Bootstrap Sanity Studio with `npm create sanity@latest`.
+- Define schemas in `sanity/schemas/*.ts` with TypeScript.
+- Generate TypeScript types (`sanity-codegen`).
+- Fetch in Astro using `@sanity/client`:
+
+  ```ts
+  import { createClient } from "@sanity/client";
+
+  const client = createClient({
+    projectId: "yourId",
+    dataset: "production",
+    useCdn: false,
+    apiVersion: "2023-10-01",
+  });
+
+  const query = `*[_type == "post"]{title, body}`;
+  const posts = await client.fetch(query);
+  ```
 
 ---
 
 ## Data Management
 
-- Use SQLite with Turso for build-time data needs.
-- Query the database in `getStaticPaths()` or server-side at build time.
-- Keep sensitive keys in environment variables.
+- Use SQLite + Turso for lightweight DB needs.
+- Fetch at build time in `getStaticPaths()` or server utilities.
 
 ---
 
-## Styling
+## Styling (Tailwind v4+)
 
-- All Tailwind theme and custom utilities go into `src/styles/global.css` instead of `tailwind.config.cjs`.
-- Use predefined utilities in `global.css` for colors and typography. To achieve shades, use transparency utilities like `text-dark/XX`.
-- At the top of `global.css`, import Tailwind and plugins:
+- Install with `@astrojs/tailwind`.
+- Primary styling via `global.css` and `@theme`:
+
   ```css
   @import "tailwindcss";
-  @plugin "@tailwindcss/typography";
-  ```
-- Define custom properties and fluid type scales via `@theme` in `global.css`:
 
-  ```css
   @theme {
-    /* Fonts */
-    --font-outfit: "Outfit Variable", sans-serif;
+    --text-base: 1rem;
+    --text-base--line-height: 1.75;
+    --text-base--font-weight: 400;
 
-    /* Colors */
-    --color-accent: oklch(40.16% 0.087584 236.9217); /* Navy Blue */
-    --color-dark: oklch(23.29% 0.0395 238.46);
-    --color-light: oklch(98.6% 0.0114 84.58); /* Based on Yellow */
-    --color-accent-yellow: oklch(78.46% 0.165273 75.3442);
-    --color-accent-red: oklch(60.95% 0.2056 29.03);
-    --color-accent-brown: oklch(38.06% 0.0819 55.12);
-    --color-secondary-1: oklch(40.81% 0.0852 154.17);
-    --color-secondary-2: oklch(37.82% 0.1445 30.8);
-
-    /* Fluid type scale */
-    --fs-h1: clamp(2rem, 5vw, 3.052rem);
-    --fs-h2: clamp(1.75rem, 4.5vw, 2.441rem);
-    --fs-h3: clamp(1.5rem, 4vw, 1.953rem);
-    --fs-h4: clamp(1.25rem, 3.5vw, 1.563rem);
-    --fs-h5: clamp(1rem, 3vw, 1.25rem);
-    --fs-h6: clamp(0.875rem, 2.5vw, 1rem);
-    --fs-p: clamp(0.875rem, 2vw, 1rem);
-    --fs-small: clamp(0.75rem, 1.5vw, 0.875rem);
-    --fs-quote: clamp(1rem, 2.5vw, 1.25rem);
-    --fs-lead: clamp(1.125rem, 2.5vw, 1.325rem);
-    --fs-note: clamp(0.875rem, 2vw, 1rem);
-    --fs-eyebrow: clamp(0.75rem, 1.75vw, 0.9rem);
+    /* Fluid headings */
+    --text-h1: clamp(2.5rem, 5vw, 3.052rem);
+    --text-h1--line-height: 1.2;
+    --text-h1--font-weight: 700;
+    --text-h2: clamp(2rem, 4vw, 2.441rem);
+    --text-h2--line-height: 1.25;
+    --text-h2--font-weight: 600;
+    /* Add h3–h6 similarly */
   }
   ```
 
-- Add custom utilities via `@layer utilities` in `global.css`:
+### Color & Typography Guidelines
 
-  ```css
-  @layer utilities {
-    /* Headings – tighter line-heights, strong weight */
-    .text-h1 {
-      font-size: var(--fs-h1);
-      line-height: 1.2;
-      font-weight: 700;
-    }
-    .text-h2 {
-      font-size: var(--fs-h2);
-      line-height: 1.25;
-      font-weight: 600;
-    }
-    .text-h3 {
-      font-size: var(--fs-h3);
-      line-height: 1.3;
-      font-weight: 600;
-    }
-    .text-h4 {
-      font-size: var(--fs-h4);
-      line-height: 1.35;
-      font-weight: 600;
-    }
-    .text-h5 {
-      font-size: var(--fs-h5);
-      line-height: 1.4;
-      font-weight: 600;
-    }
-    .text-h6 {
-      font-size: var(--fs-h6);
-      line-height: 1.4;
-      font-weight: 600;
-    }
+- **MUST**: Use only project-defined color tokens; avoid generic Tailwind colors (except `white` and `black`).
+- **MUST**: Apply semantic typography utilities from `global.css` (e.g., `.text-h1`, `.text-lead`), never ad-hoc Tailwind text sizes.
+- **MUST**: Use `space-y-*` utilities for vertical spacing between siblings—no individual margins/paddings.
+- **MUST**: Use container wrappers with max-width and horizontal padding inside sections for full-width backgrounds with aligned content.
 
-    /* Body text – comfortable line-height, normal weight */
-    .text-p {
-      font-size: var(--fs-p);
-      line-height: 1.75;
-      font-weight: 400;
-    }
-    .text-small {
-      font-size: var(--fs-small);
-      line-height: 1.75;
-      font-weight: 400;
-    }
-    .text-quote {
-      font-size: var(--fs-quote);
-      line-height: 1.75;
-      font-weight: 400;
-    }
-    .text-lead {
-      font-size: var(--fs-lead);
-      line-height: 1.6;
-      font-weight: 400;
-    }
-    .text-note {
-      font-size: var(--fs-note);
-      line-height: 1.6;
-      font-weight: 600;
-    }
+### Section Design Patterns
 
-    /* Eyebrow text – above headlines, all caps, accent color */
-    .text-eyebrow {
-      font-size: var(--fs-eyebrow);
-      line-height: 1.4;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-  }
-  ```
-
-- Attach base utilities at `:root` level via Tailwind’s `@apply`:
-  ```css
-  :root {
-    @apply font-sans text-dark bg-light antialiased;
-    font-family: var(--font-outfit);
-  }
-  ```
-- For additional global overrides (e.g., root font-size), place them in `global.css` above or below Tailwind imports.
+- **MUST**: Structure section headers as: eyebrow text → main header → description
+- **MUST**: Include eyebrow text (1-2 word slogan) above section headers
+- **MUST**: Add short descriptions under section headers for context
+- **MUST**: Wrap each section in `<section>` elements for proper semantic structure
 
 ---
 
-## Forms Handling
+## Images
 
-- Use Netlify Forms for submissions:
-  ```html
-  <form name="contact" method="POST" netlify action="/thank-you/">
-    <input type="hidden" name="form-name" value="contact" />
-    <label>
-      Name:
-      <input type="text" name="name" required />
-    </label>
-    <label>
-      Email:
-      <input type="email" name="email" required />
-    </label>
-    <label>
-      Message:
-      <textarea name="message" required></textarea>
-    </label>
-    <button type="submit">Send</button>
-  </form>
-  ```
-- Redirect to `/thank-you` after submission.
-- Add spam protection (honeypot fields or reCAPTCHA) and validation.
-- Ensure forms are accessible (labels, focus states, error feedback).
+- Use Unpic for optimized images in Astro:
+  - Endpoint: `https://unpic.pics/img/astro/`
+  - Component: `@unpic/astro`
 
 ---
 
-## Performance Optimization
+## Interactivity
 
-- Keep client-side JavaScript minimal.
-- Use `client:*` directives for partial hydration:
-  - `client:load` for components that must hydrate immediately.
-  - `client:idle` for noncritical interactive parts.
-  - `client:visible` for components that hydrate when scrolled into view.
-- Optimize images with Astro’s image integration; lazy-load large assets.
+- Use Alpine.js for simple UI behaviors (`client:load` or CDN).
+- For complex state, leverage Astro’s partial hydration (`client:idle`, `client:visible`).
+
+---
+
+## Forms
+
+- Netlify Forms or custom endpoints.
+- Include hidden `form-name` input and a thank-you redirect.
+
+---
+
+## Performance
+
+- Minimize runtime JS: prioritize static components.
+- Image optimization: `@astrojs/image` for basic ones or `@unpic/astro` for optimized advanced use.
+- Lazy-load assets.
+- Monitor Core Web Vitals.
 
 ---
 
 ## Data Fetching
 
-- Use `Astro.props` to pass data into components.
-- For dynamic routes, implement `getStaticPaths()` to fetch build-time data.
-- Use `Astro.glob()` to pull in local files (images, JSON, Markdown).
-- Wrap fetch calls in try/catch to catch errors during build.
+- Use `Astro.glob()` for local data.
+- Combine with SQLite/Turso or CMS queries.
+- Error handling in `getStaticPaths()` and components.
 
 ---
 
-## SEO and Meta Tags
+## SEO & Meta
 
-- Insert meta tags inside `<head>` on each page.
-- Add a canonical `<link>` tag pointing to the source URL.
-- Create a reusable `<SEO>` component that accepts title, description, og:image, etc.
-
----
-
-## Integrations and Plugins
-
-- Configure official Astro integrations in `astro.config.mjs`, for example:
-
-  ```js
-  // @ts-check
-  import { defineConfig } from "astro/config";
-  import alpinejs from "@astrojs/alpinejs";
-  import icon from "astro-icon";
-  import tailwindcss from "@tailwindcss/vite";
-
-  // https://astro.build/config
-  export default defineConfig({
-    integrations: [alpinejs(), icon()],
-    vite: {
-      plugins: [tailwindcss()],
-    },
-  });
-  ```
-
-- Use Astro’s Content Layer to manage Markdown or MDX files if needed.
+- Standardize `<SEO>` component for meta tags.
+- Use canonical URLs, meta descriptions, Open Graph, and Twitter Card tags.
 
 ---
 
-## Build and Deployment
+## Semantic HTML & Accessibility
 
-- Run `astro build` before deploying.
-- Deploy to Netlify with GitHub integration; use Netlify Build Hooks for auto-deploy.
-- Store environment variables in Netlify Dashboard under Settings > Build & deploy > Environment.
-- For advanced CI, add a GitHub Actions workflow that runs `astro build` on push.
+### Semantic Structure
 
----
+- **MUST**: Use semantically correct HTML elements:
+  - `<main>` for primary content area (only one per page)
+  - `<article>` for self-contained content pieces
+  - `<section>` for thematic grouping of content
+  - `<header>` for introductory content
+  - `<footer>` for closing content
+  - `<nav>` for navigation sections
+  - `<aside>` for complementary content
+  - `<figure>` and `<figcaption>` for images with captions
+  - `<time>` for dates with `datetime` attribute
 
-## Testing
+### Accessibility Requirements
 
-- Write unit tests for utility functions using Vitest.
-- Use Cypress for end-to-end testing of core flows.
-- If design changes often, set up a visual regression tool like Chromatic or Percy.
-
----
-
-## Accessibility
-
-- Use semantic HTML in components (headings, lists, landmarks, `<nav>`, `<aside>`, `<figure>`, etc.).
-- Add ARIA attributes for interactive elements (`role`, `aria-label`).
-- Confirm keyboard navigation works for custom elements.
-- Avoid inline styles that override focus outlines.
-
----
-
-## Performance Metrics
-
-- Track LCP, FID, CLS with Lighthouse or WebPageTest.
-- Define performance budgets (e.g., max page weight, number of JS bundles).
-- Monitor metrics in production via real user monitoring or synthetic tests.
+- **MUST**: Avoid `<div>` when semantic elements are more appropriate
+- **MUST**: Ensure proper heading hierarchy (one `<h1>` per page, logical order)
+- **MUST**: Use `<button>` for interactive elements, `<a>` for navigation
+- **MUST**: Include proper `alt` attributes for all images
+- **MUST**: Use `<label>` elements for form inputs
+- **MUST**: Ensure keyboard navigation for all interactive elements
 
 ---
 
-## Key Conventions
+## Documentation & Project Organization
 
-- Use modern JavaScript features; prefer import statements.
-- Use native `node:fetch`; bring in libraries only if necessary.
-- Follow Astro’s official style guide (indentation, file naming).
-- Use TypeScript for type safety; add types in `src/types/`.
-- Add trailing slashes to links and follow pagination conventions.
-- Use Astro’s `<Image>` component for responsive images.
+- **MUST**: Place all project documentation files (except main README.md) in `/docs/` folder at project root
+- **MUST**: Do not keep documentation files in `src/` or other code directories
 
 ---
 
-## References
+## Testing & QA
 
-- Astro v5 documentation: https://docs.astro.build
-- Astro Content Collections: https://docs.astro.build/en/guides/content-collections/
-- Astro Integrations: https://docs.astro.build/en/guides/integrations/
-- Turso for SQLite: https://turso.tech/
-- Netlify documentation: https://docs.netlify.com
-- Fontsource: https://fontsource.org/
-- Astro Icon docs: https://www.astroicon.dev/getting-started/
-- AlpineJS documentation: https://alpinejs.dev/
+- Use Vitest for unit testing utility functions and data logic.
+- Suggest `describe`/`it` structure for tests and `vi.mock()` for mocking.
+- Implement visual regression testing for UI components.
+
+---
+
+## Conventions
+
+- Use ES modules, native `node:fetch`.
+- TypeScript for all data.
+- Consistent trailing-slashes in URLs.
+- Use `@unpic/astro` for optimized images.
+
+### Reference
+
+- **Astro v5 Documentation**: https://docs.astro.build
+- **Content Layer**: https://docs.astro.build/en/guides/content-collections/
+- **Astro Integrations**: https://docs.astro.build/en/guides/integrations/
+- **Turso for SQLite**: https://turso.tech/
+- **Netlify Documentation**: https://docs.netlify.com
+- **Fontsource**: https://fontsource.org/
+- **Unpic** https://unpic.pics/img/astro/
